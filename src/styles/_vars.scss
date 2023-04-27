@@ -1,0 +1,26 @@
+:root {
+  --dark-shade: #1f2041;
+  --dark-shade-75: rgb(31 32 65 / 75%);
+  --dark-shade-50: rgb(31 32 65 / 50%);
+  --dark-shade-25: rgb(31 32 65 / 25%);
+  --white: rgb(31 32 65 / 5%);
+  --purple: #bc9cff;
+  --dark-purple: #3d4975;
+  --green: #6fcf97;
+  --yellow: #ffe39c;
+  --gradient: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
+  --gradient-25: linear-gradient(
+    180deg,
+    rgb(188 156 255 / 25%) 0%,
+    rgb(139 164 249 / 25%) 100%
+  );
+  --yellow-gradient: linear-gradient(180deg, #ffe39c 0%, #ffba9c 100%);
+  --green-gradient: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
+  --black-gradient: linear-gradient(180deg, #919191 0%, #3d4975 100%);
+  --main-font: 'Montserrat', 'Arial', sans-serif;
+  --main-font-size: 14px;
+  --material-font: 'Material Icons';
+  --brands-font: 'Font Awesome 6 Brands';
+}
+
+$mainFontSize: 14px;

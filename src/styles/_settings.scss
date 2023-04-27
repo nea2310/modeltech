@@ -1,0 +1,23 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  color: var(--dark-shade-75);
+  font-weight: 400;
+  font-size: 14px;
+  font-family: var(--main-font);
+  line-height: 24px;
+  background-color: #fff;
+  scroll-behavior: smooth;
+}
+
+#root {
+  height: 100%;
+}
