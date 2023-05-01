@@ -10,6 +10,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from './components/App/App';
 import { store } from './store';
 import './styles/index.scss';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');
