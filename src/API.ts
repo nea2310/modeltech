@@ -1,6 +1,8 @@
-const FirebaseAPI = {
-  fetchData: async (period: string) =>
+const API = {
+  fetchDataFromMock: async (period: string) =>
     fetch(`http://localhost:3000/entries/${period}.json`),
+
+  fetchDataFromFile: async (period: string) => fetch(`/${period}.xlsx`),
 };
 
-export { FirebaseAPI };
+export { API };

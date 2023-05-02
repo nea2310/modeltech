@@ -29,6 +29,7 @@
     "swiper": "8.4.6",
     "web-vitals": "2.1.4",
     "wnumb": "1.2.0",
+    "xlsx": "^0.18.5",
     "yup": "1.0.0"
   },
   "scripts": {

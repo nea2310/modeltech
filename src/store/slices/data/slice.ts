@@ -1,11 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit';
+import { read, utils } from 'xlsx';
 
-import { FirebaseAPI } from '../../../API';
+import { API } from '../../../API';
 import { Message } from '../../../types/Message';
 import { Status } from '../../../types/Status';
 
-type Entry = { date: string; water: string; oil: string };
+type Entry = {
+  Дата: string;
+  'Добыча жидкости, м3/сут': string;
+  'Добыча нефти, т/сут': string;
+  __rowNum__?: string;
+};
 
 type InitialState = {
   entries: Entry[];
@@ -21,29 +31,59 @@ const initialState: InitialState = {
 
 const NAMESPACE = 'data';
 
-export const fetchData = createAsyncThunk<
+export const fetchDataFromMock = createAsyncThunk<
   Entry[],
   string,
   { rejectValue: string }
->(`${NAMESPACE}/fetchData`, async (period, { rejectWithValue }) => {
+>(`${NAMESPACE}/fetchDataFromMock`, async (period, { rejectWithValue }) => {
   try {
-    const response = await FirebaseAPI.fetchData(period);
-    const data = (await response.json()) as Entry[];
-    console.log(data);
-
-    if (response === null) {
-      return rejectWithValue('data not found');
-    }
-
-    return data;
+    const response = await API.fetchDataFromMock(period);
+    return (await response.json()) as Entry[];
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue(error.message);
-    }
-
-    return rejectWithValue('An unexpected error occurred');
+    // eslint-disable-next-line no-console
+    console.error(error);
+    const message = 'Ошибка загрузки данных';
+    return rejectWithValue(message);
   }
 });
+
+export const fetchDataFromFile = createAsyncThunk<
+  Entry[],
+  string,
+  { rejectValue: string }
+>(`${NAMESPACE}/fetchDataFromFile`, async (period, { rejectWithValue }) => {
+  try {
+    const response = await (await API.fetchDataFromFile(period)).arrayBuffer();
+    const rawData = read(response);
+    return utils.sheet_to_json<Entry>(rawData.Sheets[rawData.SheetNames[0]]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    const message = 'Ошибка загрузки данных';
+    return rejectWithValue(message);
+  }
+});
+
+const isResolved = (action: AnyAction): boolean => {
+  if (typeof action.type !== 'string') return false;
+  return (
+    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('fulfilled')
+  );
+};
+
+const isPending = (action: AnyAction): boolean => {
+  if (typeof action.type !== 'string') return false;
+  return (
+    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('pending')
+  );
+};
+
+const isRejected = (action: AnyAction): boolean => {
+  if (typeof action.type !== 'string') return false;
+  return (
+    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('rejected')
+  );
+};
 
 const slice = createSlice({
   name: NAMESPACE,
@@ -51,18 +91,22 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchData.fulfilled, (state, { payload }) => {
+      .addMatcher(isResolved, (state, action: PayloadAction<Entry[]>) => {
         state.status = 'resolved';
-        state.entries = payload;
+        state.entries = action.payload;
         state.errorMessage = null;
       })
-      .addCase(fetchData.pending, (state) => {
+
+      .addMatcher(isPending, (state) => {
         state.status = 'loading';
+        state.entries = [];
         state.errorMessage = null;
       })
-      .addCase(fetchData.rejected, (state, { payload }) => {
+
+      .addMatcher(isRejected, (state, action: PayloadAction<string>) => {
         state.status = 'rejected';
-        if (typeof payload === 'string') state.errorMessage = payload;
+        state.entries = [];
+        state.errorMessage = action.payload;
       });
   },
 });
