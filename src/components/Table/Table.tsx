@@ -12,12 +12,9 @@ const Table: FC<Props> = ({ entries }) => {
   return (
     <div className="table">
       <DataTable value={entries} tableStyle={{ minWidth: '50rem' }}>
-        <Column field="Дата" header="Дата" />
-        <Column
-          field="Добыча жидкости, м3/сут"
-          header="Добыча жидкости, м3/сут"
-        />
-        <Column field="Добыча нефти, т/сут" header="Добыча нефти, т/сут" />
+        <Column field="date" header="Дата" />
+        <Column field="water" header="Добыча жидкости, м3/сут" />
+        <Column field="oil" header="Добыча нефти, т/сут" />
       </DataTable>
     </div>
   );

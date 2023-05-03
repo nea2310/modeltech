@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   AnyAction,
   createAsyncThunk,
@@ -7,6 +8,7 @@ import {
 import { read, utils } from 'xlsx';
 
 import { API } from '../../../API';
+import { formatDate } from '../../../shared/helpers/formatDate';
 import { Entry } from '../../../types/Entry';
 import { Message } from '../../../types/Message';
 import { Status } from '../../../types/Status';
@@ -49,7 +51,16 @@ export const fetchDataFromFile = createAsyncThunk<
   try {
     const response = await (await API.fetchDataFromFile(period)).arrayBuffer();
     const rawData = read(response);
-    return utils.sheet_to_json<Entry>(rawData.Sheets[rawData.SheetNames[0]]);
+    const rawEntries = utils.sheet_to_json<Entry>(
+      rawData.Sheets[rawData.SheetNames[0]]
+    );
+
+    const data = rawEntries.map((item) => {
+      const [rawDate, water, oil] = Object.values(item);
+      const date = formatDate(Number(rawDate));
+      return { date, water, oil };
+    });
+    return data;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

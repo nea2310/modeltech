@@ -1,8 +1,7 @@
 type Entry = {
-  Дата: string;
-  'Добыча жидкости, м3/сут': string;
-  'Добыча нефти, т/сут': string;
-  __rowNum__?: string;
+  date: string;
+  water: string | number;
+  oil: string | number;
 };
 
 export type { Entry };
