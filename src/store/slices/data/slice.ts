@@ -3,13 +3,12 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { read, utils } from 'xlsx';
 
 import { API } from '../../../API';
-import { formatDate } from '../../../shared/helpers/formatDate';
 import { Entry } from '../../../types/Entry';
 import { Message } from '../../../types/Message';
 import { Status } from '../../../types/Status';
 
 import { EMPTY_BUFFER_SIZE, ERROR_MESSAGE, NAMESPACE } from './constants';
-import { isPending, isRejected, isResolved } from './helpers';
+import { formatDate, isPending, isRejected, isResolved } from './helpers';
 
 type InitialState = {
   entries: Entry[];

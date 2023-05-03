@@ -23,4 +23,9 @@ const isRejected = (action: AnyAction): boolean => {
   );
 };
 
-export { isPending, isRejected, isResolved };
+const formatDate = (dateString: number) => {
+  const date = new Date(Date.UTC(1900, 0, dateString - 1));
+  return date.toLocaleDateString('ru-RU');
+};
+
+export { formatDate, isPending, isRejected, isResolved };
