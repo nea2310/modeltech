@@ -1,13 +1,13 @@
 @import '../../styles/mixins.scss';
 
-.landing-page{
+.landing-page {
   display: grid;
-  grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(5, auto);
+  grid-template-columns: repeat(2, auto);
   gap: 20px;
   padding: 20px;
 
-  &__table{
+  &__table {
     grid-row: 1/6;
     grid-column: 1/2;
 
@@ -17,7 +17,7 @@
     }
   }
 
-  &__label{
+  &__label {
     display: inline-block;
     margin-bottom: 20px;
   }
@@ -25,10 +25,12 @@
   &__select-from-mock,
   &__select-from-file,
   &__info-mock,
-  &__info-file{
-    max-width: 300px;
+  &__info-file {
     justify-self: end;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    max-width: 300px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+      'Segoe UI Symbol';
 
     @include large {
       justify-self: center;
@@ -36,13 +38,12 @@
   }
 
   &__select-from-mock,
-  &__select-from-file{
-    font-weight: bold;
+  &__select-from-file {
     color: #343a40;
+    font-weight: bold;
   }
 
-
-  &__select-from-mock{
+  &__select-from-mock {
     grid-row: 1/2;
     grid-column: 2/3;
 
@@ -52,7 +53,7 @@
     }
   }
 
-  &__select-from-file{
+  &__select-from-file {
     grid-row: 2/3;
     grid-column: 2/3;
 
@@ -62,7 +63,7 @@
     }
   }
 
-  &__info-mock{
+  &__info-mock {
     grid-row: 3/4;
     grid-column: 2/3;
 
@@ -72,7 +73,7 @@
     }
   }
 
-  &__info-file{
+  &__info-file {
     grid-row: 4/5;
     grid-column: 2/3;
 
