@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import { FC } from 'react';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 
-export default function BasicDemo() {
-  const [products] = useState([]);
+import { Entry } from '../../types/Entry';
 
+type Props = {
+  entries: Entry[];
+};
+
+const Table: FC<Props> = ({ entries }) => {
   return (
-    <div className="card">
-      <DataTable value={products} tableStyle={{ minWidth: '50rem' }}>
-        <Column field="code" header="Code" />
-        <Column field="name" header="Name" />
-        <Column field="category" header="Category" />
-        <Column field="quantity" header="Quantity" />
+    <div className="table">
+      <DataTable value={entries} tableStyle={{ minWidth: '50rem' }}>
+        <Column field="Дата" header="Дата" />
+        <Column
+          field="Добыча жидкости, м3/сут"
+          header="Добыча жидкости, м3/сут"
+        />
+        <Column field="Добыча нефти, т/сут" header="Добыча нефти, т/сут" />
       </DataTable>
     </div>
   );
-}
+};
+
+export { Table };

@@ -1,7 +1,9 @@
 import { FC } from 'react';
 
 import { PeriodSelector } from '../../components/PeriodSelector/PeriodSelector';
-import { useAppDispatch } from '../../hooks/redux';
+import { Table } from '../../components/Table/Table';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { entriesSelect } from '../../store/slices/data/selectors';
 import {
   fetchDataFromFile,
   fetchDataFromMock,
@@ -10,6 +12,7 @@ import {
 import { options } from './constants';
 
 const LandingPage: FC = () => {
+  const entries = useAppSelector(entriesSelect);
   const dispatch = useAppDispatch();
   const handleChangeListFromMock = (value: string) =>
     dispatch(fetchDataFromMock(value));
@@ -19,6 +22,9 @@ const LandingPage: FC = () => {
 
   return (
     <main className="landing-page">
+      <div className="landing-page__table">
+        <Table entries={entries} />
+      </div>
       <div className="landing-page__select-from-mock">
         <span>Выберите период для отображения данных *</span>
         <PeriodSelector options={options} onChange={handleChangeListFromMock} />

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ListBox } from 'primereact/listbox';
 
 import { Option } from '../../types/Option';

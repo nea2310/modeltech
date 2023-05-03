@@ -7,15 +7,9 @@ import {
 import { read, utils } from 'xlsx';
 
 import { API } from '../../../API';
+import { Entry } from '../../../types/Entry';
 import { Message } from '../../../types/Message';
 import { Status } from '../../../types/Status';
-
-type Entry = {
-  Дата: string;
-  'Добыча жидкости, м3/сут': string;
-  'Добыча нефти, т/сут': string;
-  __rowNum__?: string;
-};
 
 type InitialState = {
   entries: Entry[];
