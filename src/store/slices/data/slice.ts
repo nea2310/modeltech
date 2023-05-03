@@ -1,10 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  AnyAction,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { read, utils } from 'xlsx';
 
 import { API } from '../../../API';
@@ -12,6 +7,9 @@ import { formatDate } from '../../../shared/helpers/formatDate';
 import { Entry } from '../../../types/Entry';
 import { Message } from '../../../types/Message';
 import { Status } from '../../../types/Status';
+
+import { EMPTY_BUFFER_SIZE, ERROR_MESSAGE, NAMESPACE } from './constants';
+import { isPending, isRejected, isResolved } from './helpers';
 
 type InitialState = {
   entries: Entry[];
@@ -25,8 +23,6 @@ const initialState: InitialState = {
   entries: [],
 };
 
-const NAMESPACE = 'data';
-
 export const fetchDataFromMock = createAsyncThunk<
   Entry[],
   string,
@@ -34,12 +30,11 @@ export const fetchDataFromMock = createAsyncThunk<
 >(`${NAMESPACE}/fetchDataFromMock`, async (period, { rejectWithValue }) => {
   try {
     const response = await API.fetchDataFromMock(period);
-    return (await response.json()) as Entry[];
+    if (response.status !== 200) return rejectWithValue(ERROR_MESSAGE);
+    const rawData = await response.json();
+    return rawData as Entry[];
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    const message = 'Ошибка загрузки данных';
-    return rejectWithValue(message);
+    return rejectWithValue(ERROR_MESSAGE);
   }
 });
 
@@ -50,6 +45,10 @@ export const fetchDataFromFile = createAsyncThunk<
 >(`${NAMESPACE}/fetchDataFromFile`, async (period, { rejectWithValue }) => {
   try {
     const response = await (await API.fetchDataFromFile(period)).arrayBuffer();
+
+    const view = new DataView(response);
+    if (view.byteLength <= EMPTY_BUFFER_SIZE)
+      return rejectWithValue(ERROR_MESSAGE);
     const rawData = read(response);
     const rawEntries = utils.sheet_to_json<Entry>(
       rawData.Sheets[rawData.SheetNames[0]]
@@ -62,33 +61,9 @@ export const fetchDataFromFile = createAsyncThunk<
     });
     return data;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    const message = 'Ошибка загрузки данных';
-    return rejectWithValue(message);
+    return rejectWithValue(ERROR_MESSAGE);
   }
 });
-
-const isResolved = (action: AnyAction): boolean => {
-  if (typeof action.type !== 'string') return false;
-  return (
-    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('fulfilled')
-  );
-};
-
-const isPending = (action: AnyAction): boolean => {
-  if (typeof action.type !== 'string') return false;
-  return (
-    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('pending')
-  );
-};
-
-const isRejected = (action: AnyAction): boolean => {
-  if (typeof action.type !== 'string') return false;
-  return (
-    action.type.startsWith(`${NAMESPACE}/`) && action.type.endsWith('rejected')
-  );
-};
 
 const slice = createSlice({
   name: NAMESPACE,
